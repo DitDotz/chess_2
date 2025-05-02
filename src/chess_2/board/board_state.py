@@ -1,18 +1,25 @@
-from typing import Optional, Dict
-from utils import Color
+from typing import Optional, Dict, Tuple
+
+from chess_2.utils.enums import Color
+
+from chess_2.piece import Piece
+
 class BoardState:
 
     def __init__(self):
-        self.curr_piece_loc: Dict[str, str] = {}
-        self.player_turn = # enum
+        self.piece_pos: dict = {} # piece : tuple
+        self.player_turn = Color.WHITE # default
         
-    def player_turn(self):
+    def switch_player_turn(self):
         """
-        Returns the current player's turn.
+        Switches player turn
         """
-        return self.player_turn
+        self.player_turn = Color.BLACK if self.player_turn == Color.WHITE else Color.WHITE
+
     
-
-
-
+    def set_piece_location(self.piece_pos:dict, position: str, piece: str) -> None:
+        """
+        Sets the piece at a given position.
+        """
+        pass
 
