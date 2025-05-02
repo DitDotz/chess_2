@@ -4,6 +4,20 @@ from chess_2.utils.enums import PieceType, Color
 from chess_2.utils.types import Position
 from chess_2.board.board_state import BoardState  # assuming the BoardState class is in the boardstate module
 
+def test_switch_player_turn():
+    board = BoardState()
+    
+    # Initially assume it's White's turn
+    board.player_turn = Color.WHITE
+    result = board.switch_player_turn()
+    assert result == Color.BLACK
+    assert board.player_turn == Color.BLACK
+
+    # Switch back to White
+    result = board.switch_player_turn()
+    assert result == Color.WHITE
+    assert board.player_turn == Color.WHITE
+
 def test_set_piece_location():
     board = BoardState()
     piece = Piece(position=Position(0, 0), color=Color.WHITE, piece_type=PieceType.ROOK)
