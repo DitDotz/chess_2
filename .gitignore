@@ -176,3 +176,8 @@ poetry.toml
 pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python,poetry
+
+# sphinx ignore build and temp files in docs
+docs/_build/
+docs/.doctrees/
+docs/.buildinfo
