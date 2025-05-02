@@ -1,8 +1,6 @@
-
-from chess_2.board.board_state import BoardState
 from chess_2.utils.enums import Color
 
-def is_in_check(player_turn:Color, board_state: BoardState) -> bool:
+def is_in_check(player_turn:Color, piece_pos: dict) -> bool:
     """
     Determines if the current player is in check.
     
@@ -12,7 +10,7 @@ def is_in_check(player_turn:Color, board_state: BoardState) -> bool:
 
     pass
 
-def is_in_checkmate(player_turn:Color, board_state: BoardState) -> bool:
+def is_in_checkmate(player_turn:Color, piece_pos: dict) -> bool:
     """
     Determines if the current player is in checkmate.
     
@@ -22,7 +20,7 @@ def is_in_checkmate(player_turn:Color, board_state: BoardState) -> bool:
     pass
 
 
-def is_in_stalemate(player_turn:Color, board_state: BoardState) -> bool:
+def is_in_stalemate(player_turn:Color, piece_pos: dict) -> bool:
     """
     Determines if the game is in a stalemate.
     

@@ -15,22 +15,48 @@ class BoardState:
         Switches player turn
         """
         self.player_turn = Color.BLACK if self.player_turn == Color.WHITE else Color.WHITE
+        return self.player_turn
 
-    
-    def set_piece_location(self, original_pos: Position, final_pos: Position, piece: Piece) -> None:
+    def set_piece_location(self, position: Position, piece: Piece) -> None:
+        """
+        Place a piece at the specified position on the board.
+
+        Args:
+            position (Position): The position where the piece should be placed.
+            piece (Piece): The piece to place at the given position.
+
+        Returns:
+            dict[Position, Piece]: The updated board state.
+
+        """
+        self.piece_pos[position] = piece
+        return self.piece_pos  # Returning the updated board state for testability
+
+    def move_piece(self, piece: Piece, to_pos: Position) -> None:
         """
         Sets the piece at a given board position.
 
         Args:
-            position (Position): The (x, y) coordinates on the board.
-            piece (Piece): The piece to place at the given position.
+            piece (Piece): The piece to move.
+            to_pos (Position): The destination position of the piece.
+
+        Returns:
+            dict[Position, Piece]: The updated board state.
         """
+        # Get the original position from the piece's current position
+        original_pos = piece.position
 
-        piece_moved = piece_pos[original_pos]
+        # TODO validate move is correct first
 
-        self.piece_pos[original_pos] = Piece(color=Color.NONE, piece_type=PieceType.EMPTY, position=original_pos)
-        
-        self.piece_pos[final_pos] = piece_moved
+        # Move the piece by setting the original position to empty and placing the piece at the new position
+        self.set_piece_location(position=original_pos, piece=Piece(position=original_pos, color=Color.NONE, piece_type=PieceType.EMPTY))
+
+        # Update the piece's position to reflect the move
+
+        piece.position = to_pos
+        self.set_piece_location(position=to_pos, piece=piece)
+
+        return self.piece_pos
 
 
 

@@ -12,12 +12,13 @@ def get_player_input(color: Color) -> tuple[str, str]:
         Tuple of (from_pos, to_pos) in algebraic notation, e.g., ('e2', 'e4').
     """
     print(f"{color.name.capitalize()}'s move:")
-    move = input("Enter your move (e.g., e2 e4): ").strip().split()
+    move = input("Enter your move (e.g., be2e4): ").strip().split()
     return move
 
     
 def run_game():
     board_state = BoardState()
+    
     # TO DO: Initialize from fixed starting position
     
     while True:
