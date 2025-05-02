@@ -1,7 +1,7 @@
 from chess_2.board.board_state import BoardState
 from chess_2.utils.enums import Color
 from chess_2.board.board_representation import generate_board_repr
-from chess_2.utils.fen import START_FEN, parse_fen
+from chess_2.utils.fen import START_FEN, parse_fen, parse_user_input
 
 
 def get_player_input(color: Color) -> tuple[str, str]:
@@ -25,7 +25,7 @@ def run_game():
         print(generate_board_repr(board_state.piece_pos))
         move = get_player_input()
 
-        piece_to_move, final_pos = parse_user_input(move)\
+        piece_to_move, final_pos = parse_user_input(move)
         
         # TO DO: incorporate validation move checks
         board_state.move_piece(piece_to_move, final_pos)
