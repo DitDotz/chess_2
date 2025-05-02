@@ -9,6 +9,7 @@ class BoardState:
     def __init__(self):
         self.piece_pos: dict[Position, Piece] = {}
         self.player_turn = Color.WHITE # default
+        self.is_in_checkmate = False
         
     def switch_player_turn(self)->None:
         """
