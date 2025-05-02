@@ -1,7 +1,7 @@
 from chess_2.board.board_state import BoardState
 from chess_2.utils.enums import Color
 from chess_2.board.board_representation import generate_board_repr
-from chess_2.utils.fen import algebraic_to_position, starting_fen
+from chess_2.utils.fen import START_FEN, parse_fen
 
 
 def get_player_input(color: Color) -> tuple[str, str]:
@@ -18,15 +18,17 @@ def get_player_input(color: Color) -> tuple[str, str]:
     
 def run_game():
     board_state = BoardState()
-    
-    # TO DO: Initialize from fixed starting position
+    # Initialize from fixed starting position
+    board_state.piece_pos = parse_fen(START_FEN)
     
     while True:
         print(generate_board_repr(board_state.piece_pos))
         move = get_player_input()
-        # TO DO: process move from fen to Position
+
+        piece_to_move, final_pos = parse_user_input(move)\
+        
         # TO DO: incorporate validation move checks
-        board_state.set_piece_location()
+        board_state.move_piece(piece_to_move, final_pos)
         board_state.switch_player_turn()
 
 if __name__ == "__main__":

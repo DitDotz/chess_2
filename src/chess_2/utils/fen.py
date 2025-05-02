@@ -14,9 +14,6 @@ PIECE_TYPE_FEN_MAP: dict[str, PieceType] = {
     "n": PieceType.KNIGHT,
 }
 
-FILE_TO_INDEX = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7}
-RANK_TO_INDEX = {'1': 7, '2': 6, '3': 5, '4': 4, '5': 3, '6': 2, '7': 1, '8': 0}
-
 START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
 
 
@@ -83,6 +80,12 @@ def parse_user_input(user_input: str) -> tuple[Piece, Position]:
     
     return piece_moved, to_pos
 
+FILE_TO_INDEX = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7}
+RANK_TO_INDEX = {'1': 7, '2': 6, '3': 5, '4': 4, '5': 3, '6': 2, '7': 1, '8': 0}
+
+INDEX_TO_FILE = {v: k for k, v in FILE_TO_INDEX.items()}
+INDEX_TO_RANK = {v: k for k, v in RANK_TO_INDEX.items()}
+
 
 def algebraic_to_index(fen_notation: str) -> Position:
     """
@@ -97,3 +100,17 @@ def algebraic_to_index(fen_notation: str) -> Position:
     file, rank = fen_notation[0], fen_notation[1]
 
     return (Position(row=RANK_TO_INDEX[rank], col=FILE_TO_INDEX[file]))
+
+def index_to_algebraic(pos: Position) -> str:
+    """
+    Convert a (row, col) board position to algebraic notation (e.g., Position(4, 4) -> 'e4').
+
+    Args:
+        pos (Position): The board position to convert.
+
+    Returns:
+        str: The algebraic notation string.
+    """
+    file = INDEX_TO_FILE[pos.col]
+    rank = INDEX_TO_RANK[pos.row]
+    return f"{file}{rank}"
