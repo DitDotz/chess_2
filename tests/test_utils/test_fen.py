@@ -86,3 +86,17 @@ def test_parse_user_input_invalid_format():
 def test_parse_user_input_invalid_piece():
     with pytest.raises(ValueError):
         parse_user_input("xe2e4")  # 'x' is not a valid piece type
+
+def test_algebraic_to_index():
+    # Test conversion of various positions
+    test_cases = [
+        ("e4", Position(row=4, col=4)),  # Should map 'e4' -> (4, 4)
+        ("a1", Position(row=7, col=0)),  # Should map 'a1' -> (7, 0)
+        ("h8", Position(row=0, col=7)),  # Should map 'h8' -> (0, 7)
+        ("d5", Position(row=3, col=3)),  # Should map 'd5' -> (3, 3)
+        ("g3", Position(row=5, col=6)),  # Should map 'g3' -> (5, 6)
+    ]
+
+    for fen_notation, expected in test_cases:
+        result = algebraic_to_index(fen_notation)
+        assert result == expected, f"Expected {expected} for {fen_notation}, but got {result}"
