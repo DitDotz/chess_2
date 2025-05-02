@@ -1,5 +1,5 @@
 import pytest
-from chess_2.utils.fen import parse_fen, START_FEN, parse_user_input, algebraic_to_index
+from chess_2.utils.fen import parse_fen, START_FEN, parse_user_input, algebraic_to_index, index_to_algebraic
 from chess_2.utils.enums import PieceType, Color
 from chess_2.utils.types import Position
 from chess_2.piece.piece import Piece
@@ -100,3 +100,9 @@ def test_algebraic_to_index():
     for fen_notation, expected in test_cases:
         result = algebraic_to_index(fen_notation)
         assert result == expected, f"Expected {expected} for {fen_notation}, but got {result}"
+
+def test_index_to_algebraic():
+    assert index_to_algebraic(Position(row=6, col=4)) == "e2"
+    assert index_to_algebraic(Position(row=0, col=0)) == "a8"
+    assert index_to_algebraic(Position(row=7, col=7)) == "h1"
+    assert index_to_algebraic(Position(row=3, col=3)) == "d5"
