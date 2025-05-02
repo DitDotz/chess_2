@@ -1,7 +1,8 @@
 import pytest
-from chess_2.utils.fen import parse_fen, START_FEN
+from chess_2.utils.fen import parse_fen, START_FEN, parse_user_input, algebraic_to_index
 from chess_2.utils.enums import PieceType, Color
 from chess_2.utils.types import Position
+from chess_2.piece.piece import Piece
 
 # Test Case 1: Test a piece_loc with a full set of pieces and empty squares in the middle.
 
@@ -57,3 +58,31 @@ def test_parse_fen_one_empty_square():
     assert board[Position(row=0, col=1)].piece_type == PieceType.EMPTY
     assert board[Position(row=0, col=0)].piece_type == PieceType.ROOK
 
+
+def test_parse_user_input_valid_white_pawn():
+    user_input = "Pe2e4"
+    piece, to_pos = parse_user_input(user_input)
+
+    expected_piece = Piece(position=Position(row=6, col=4), color=Color.WHITE, piece_type=PieceType.PAWN)
+    expected_to_pos = Position(row=4, col=4)
+
+    assert piece == expected_piece
+    assert to_pos == expected_to_pos
+
+def test_parse_user_input_black_knight():
+    user_input = "ng8f6"
+    piece, to_pos = parse_user_input(user_input)
+
+    expected_piece = Piece(position=Position(row=0, col=6), color=Color.BLACK, piece_type=PieceType.KNIGHT)
+    expected_to_pos = Position(row=2, col=5)
+
+    assert piece == expected_piece
+    assert to_pos == expected_to_pos
+
+def test_parse_user_input_invalid_format():
+    with pytest.raises(ValueError):
+        parse_user_input("e2e4")  # Missing parentheses and piece type
+
+def test_parse_user_input_invalid_piece():
+    with pytest.raises(ValueError):
+        parse_user_input("xe2e4")  # 'x' is not a valid piece type
