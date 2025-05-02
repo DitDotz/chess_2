@@ -8,7 +8,7 @@
 
 import os
 import sys
-sys.path.insert(0, os.path.abspath('"C:\\Users\\Zhi Quan\\Documents\\chess_2.0\\src\\'))  # Add src to path
+sys.path.insert(0, os.path.abspath('"C:\\Users\\Zhi Quan\\Documents\\chess_2.0\\src\\chess_2'))  # Add src to path
 
 project = 'chess_2'
 copyright = '2025, Zhi Quan'
@@ -24,7 +24,7 @@ extensions = [
 ]
 
 autoapi_type = 'python'
-autoapi_dirs = ['./']  # path to your source code
+autoapi_dirs = ['../../src/chess_2']  # path to your source code
 
 html_theme = 'alabaster'
 html_static_path = ['_static']
