@@ -43,19 +43,19 @@ def is_legal_move(piece_pos:dict[Position, Piece], piece_to_move:Piece, final_po
     Returns:
         bool: True if the move is legal, False otherwise.
     """
-    # TODO: if move is outside of board
-    if not is_move_within_board(final_pos):
-        raise IllegalMove(piece_to_move, final_pos, reason="Move is outside of board boundaries.")
+    # # TODO: if move is outside of board
+    # if not is_move_within_board(final_pos):
+    #     raise IllegalMove(piece_to_move, final_pos, reason="Move is outside of board boundaries.")
 
-    # TODO: if move results in own king in check or checkmate
-    if does_move_put_king_in_check(piece_pos, piece_to_move, final_pos):
-        raise IllegalMove(piece_to_move, final_pos, reason="Move results in own king being in check or checkmate.")
-    # TODO: if move is not a valid piece-type move
+    # # TODO: if move results in own king in check or checkmate
+    # if does_move_put_king_in_check(piece_pos, piece_to_move, final_pos):
+    #     raise IllegalMove(piece_to_move, final_pos, reason="Move results in own king being in check or checkmate.")
+    # # TODO: if move is not a valid piece-type move
 
-    if not is_valid_piece_move(piece_to_move, final_pos):
-        raise IllegalMove(piece_to_move, final_pos, reason="Move is not valid for this piece type.")
+    # if not is_valid_piece_move(piece_to_move, final_pos):
+    #     raise IllegalMove(piece_to_move, final_pos, reason="Move is not valid for this piece type.")
 
-    # If no issues, return True
+    # # If no issues, return True
     return True
 
 class IllegalMove(Exception):
