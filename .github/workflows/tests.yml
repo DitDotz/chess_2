@@ -1,4 +1,4 @@
-name: Run Pytest with Poetry
+name: CI/CD
 
 on:
   push:
@@ -33,5 +33,20 @@ jobs:
     - name: Install dependencies
       run: poetry install --no-interaction
 
-    - name: Run tests with pytest
-      run: poetry run pytest
+    - name: Lint only changed Python files
+      run: |
+        CHANGED_FILES=$(git diff --name-only origin/development...HEAD -- '*.py')
+        if [ -n "$CHANGED_FILES" ]; then
+          echo "$CHANGED_FILES" | xargs poetry run flake8
+        else
+          echo "No Python files changed. Skipping lint."
+        fi
+
+    - name: Run pytest coverage on changed files
+      run: |
+        CHANGED=$(git diff --name-only origin/development...HEAD -- '*.py' | tr '\n' ' ')
+        if [ -n "$CHANGED" ]; then
+          poetry run pytest --cov=$CHANGED --cov-fail-under=50 --cov-report=term-missing
+        else
+          echo "No Python files changed. Skipping tests."
+        fi
