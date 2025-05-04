@@ -61,7 +61,7 @@ def test_parse_fen_one_empty_square():
 
 def test_parse_user_input_valid_white_pawn():
     user_input = "Pe2e4"
-    piece, to_pos = parse_user_input(user_input)
+    piece, to_pos = parse_user_input(user_input, piece_color=Color.WHITE)
 
     expected_piece = Piece(position=Position(row=6, col=4), color=Color.WHITE, piece_type=PieceType.PAWN)
     expected_to_pos = Position(row=4, col=4)
@@ -71,7 +71,7 @@ def test_parse_user_input_valid_white_pawn():
 
 def test_parse_user_input_black_knight():
     user_input = "ng8f6"
-    piece, to_pos = parse_user_input(user_input)
+    piece, to_pos = parse_user_input(user_input, piece_color=Color.BLACK)
 
     expected_piece = Piece(position=Position(row=0, col=6), color=Color.BLACK, piece_type=PieceType.KNIGHT)
     expected_to_pos = Position(row=2, col=5)
@@ -81,11 +81,30 @@ def test_parse_user_input_black_knight():
 
 def test_parse_user_input_invalid_format():
     with pytest.raises(ValueError):
-        parse_user_input("e2e4")  # Missing parentheses and piece type
+        parse_user_input("e2e4", piece_color=Color.WHITE)  # Missing parentheses and piece type
 
 def test_parse_user_input_invalid_piece():
     with pytest.raises(ValueError):
-        parse_user_input("xe2e4")  # 'x' is not a valid piece type
+        parse_user_input("xe2e4", piece_color=Color.WHITE)  # 'x' is not a valid piece type
+
+
+@pytest.mark.parametrize("color,notation,expected_dest", [
+    (Color.WHITE, "O-O", "g1"),
+    (Color.WHITE, "O-O-O", "c1"),
+    (Color.BLACK, "O-O", "g8"),
+    (Color.BLACK, "O-O-O", "c8"),
+])
+
+def test_parse_user_input_castling(color, notation, expected_dest):
+    piece, to_pos = parse_user_input(notation, piece_color=color)
+
+    expected_pos = algebraic_to_index("e1" if color == Color.WHITE else "e8")
+    expected_to_pos = algebraic_to_index(expected_dest)
+
+    assert piece.piece_type == PieceType.KING
+    assert piece.color == color
+    assert piece.position == expected_pos
+    assert to_pos == expected_to_pos
 
 def test_algebraic_to_index():
     # Test conversion of various positions

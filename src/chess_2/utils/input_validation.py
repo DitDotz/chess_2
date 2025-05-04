@@ -3,10 +3,6 @@ from chess_2.utils.types import Position
 from chess_2.board.board_state import Piece
 # from chess_2.piece_movement import xxx
 
-def is_valid_notation(move:str)->bool:
-    """ Validate if the move is in the correct format (e.g., pe2e4, Qd1d2) """
-    return bool(re.match(r"^[pnbrqkPNBRQK][a-h][1-8][a-h][1-8]$", move))
-
 class InvalidNotation(Exception):
     """Exception raised for invalid move notation."""
     def __init__(self, move: str):
@@ -32,31 +28,6 @@ class PieceDoesNotExist(Exception):
         self.position = position
         self.message = f"Piece specified not found at position {position}. Please select a valid piece."
         super().__init__(self.message)
-
-def is_legal_move(piece_pos:dict[Position, Piece], piece_to_move:Piece, final_pos:Position):
-    """
-    Check if a move is legal based on game rules (e.g., piece movement, check condition).
-    Args:
-        board_state (BoardState): The current board state.
-        piece_to_move (Piece): The piece being moved.
-        final_pos (str): The target position to move the piece to (e.g., 'e4').
-    Returns:
-        bool: True if the move is legal, False otherwise.
-    """
-    # # TODO: if move is outside of board
-    # if not is_move_within_board(final_pos):
-    #     raise IllegalMove(piece_to_move, final_pos, reason="Move is outside of board boundaries.")
-
-    # # TODO: if move results in own king in check or checkmate
-    # if does_move_put_king_in_check(piece_pos, piece_to_move, final_pos):
-    #     raise IllegalMove(piece_to_move, final_pos, reason="Move results in own king being in check or checkmate.")
-    # # TODO: if move is not a valid piece-type move
-
-    # if not is_valid_piece_move(piece_to_move, final_pos):
-    #     raise IllegalMove(piece_to_move, final_pos, reason="Move is not valid for this piece type.")
-
-    # # If no issues, return True
-    return True
 
 class IllegalMove(Exception):
     """Exception raised for an illegal move."""

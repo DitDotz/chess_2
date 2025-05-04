@@ -14,6 +14,8 @@ class Color(Enum):
     BLACK = 1
     NONE = -1
 
+    def __str__(self):
+        return self.name.capitalize()
 class PieceType(Enum):
     """
     Enumeration representing the types of chess pieces.

@@ -15,16 +15,33 @@ class PieceMovement(ABC):
         self.piece = piece
 
     @abstractmethod
-    def get_valid_moves(
-        self, piece_loc: dict[Position, Piece]
-    ) -> list[Position]:
+    def get_potential_moves(self, piece_loc: dict[Position, Piece]) -> list[Position]:
         """
-        Get the valid moves for the piece on the given board.
+        Get all potential (theoretical) moves for the piece without considering king safety.
 
         Args:
-            piece_loc (dict[Position, Piece]): The current state of the chessboard.
+            piece_loc (dict[Position, Piece]): The current board state.
 
         Returns:
-            list[Position]: A list of valid moves for the piece.
+            List[Position]: Potential moves for the piece.
         """
         pass
+
+    def get_valid_moves(self, piece_loc: dict[Position, Piece]) -> list[Position]:
+        """
+        Get legal moves for the piece (excluding those that leave king in check).
+
+        Args:
+            piece_loc (dict[Position, Piece]): The current board state.
+
+        Returns:
+            List[Position]: Valid legal moves.
+        """
+        from chess_2.piece_movement.move_generator import is_king_in_check_after_move
+
+        valid_moves = []
+        for move in self.get_potential_moves(piece_loc):
+            if not is_king_in_check_after_move(self.piece, move, piece_loc):
+                valid_moves.append(move)
+
+        return valid_moves

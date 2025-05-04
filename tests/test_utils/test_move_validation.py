@@ -9,8 +9,11 @@ from chess_2.utils.move_validation import (
     is_occupied_by_opposing,
     has_moved,
     has_horizontal_path_clear_between,
+    can_castle_kingside,
+    can_castle_queenside
 )
 
+from ..helpers import place_king
 
 def generate_empty_board() -> dict[Position, Piece]:
     return {
@@ -56,3 +59,70 @@ def has_horizontal_path_clear_between():
     board[Position(7, 5)] = Piece(position=Position(7, 5), color=Color.WHITE, piece_type=PieceType.KNIGHT)
     assert has_horizontal_path_clear_between(board, Position(7, 4), Position(7, 7)) is False
 
+def test_castling_not_possible_without_rook():
+    board = generate_empty_board()
+    place_king(board, color=Color.WHITE, pos="e1")  # King in place, rook missing
+
+    assert can_castle_kingside(Color.WHITE, board) is False
+    assert can_castle_queenside(Color.WHITE, board) is False
+
+def test_can_castle_kingside_white_true():
+    board = generate_empty_board()
+    place_king(board, Color.WHITE, pos="e1")
+    rook_pos = Position(7, 7)  # h1
+    board[rook_pos] = Piece(position=rook_pos, color=Color.WHITE, piece_type=PieceType.ROOK)
+
+    assert can_castle_kingside(Color.WHITE, board) is True
+
+
+def test_can_castle_kingside_black_true():
+    board = generate_empty_board()
+    place_king(board, Color.BLACK, pos="e8")
+    rook_pos = Position(0, 7)  # h8
+    board[rook_pos] = Piece(position=rook_pos, color=Color.BLACK, piece_type=PieceType.ROOK)
+
+    assert can_castle_kingside(Color.BLACK, board) is True
+
+
+def test_can_castle_kingside_false_if_king_moved():
+    board = generate_empty_board()
+    king_pos = Position(7, 4)
+    board[king_pos] = Piece(position=king_pos, color=Color.WHITE, piece_type=PieceType.KING, has_moved=True)
+    board[Position(7, 7)] = Piece(position=Position(7, 7), color=Color.WHITE, piece_type=PieceType.ROOK)
+
+    assert can_castle_kingside(Color.WHITE, board) is False
+
+
+def test_can_castle_kingside_false_if_rook_moved():
+    board = generate_empty_board()
+    place_king(board, Color.WHITE, pos="e1")
+    rook_pos = Position(7, 7)
+    board[rook_pos] = Piece(position=rook_pos, color=Color.WHITE, piece_type=PieceType.ROOK, has_moved=True)
+
+    assert can_castle_kingside(Color.WHITE, board) is False
+
+
+def test_can_castle_kingside_false_if_blocked():
+    board = generate_empty_board()
+    place_king(board, Color.WHITE, pos="e1")
+    board[Position(7, 5)] = Piece(position=Position(7, 5), color=Color.WHITE, piece_type=PieceType.KNIGHT)
+    board[Position(7, 7)] = Piece(position=Position(7, 7), color=Color.WHITE, piece_type=PieceType.ROOK)
+
+    assert can_castle_kingside(Color.WHITE, board) is False
+
+
+def test_can_castle_queenside_white_true():
+    board = generate_empty_board()
+    place_king(board, Color.WHITE, pos="e1")
+    board[Position(7, 0)] = Piece(position=Position(7, 0), color=Color.WHITE, piece_type=PieceType.ROOK)
+
+    assert can_castle_queenside(Color.WHITE, board) is True
+
+
+def test_can_castle_queenside_false_if_squares_attacked():
+    board = generate_empty_board()
+    place_king(board, Color.WHITE, pos="e1")
+    board[Position(7, 0)] = Piece(position=Position(7, 0), color=Color.WHITE, piece_type=PieceType.ROOK)
+    board[Position(0, 3)] = Piece(position=Position(0, 3), color=Color.BLACK, piece_type=PieceType.ROOK)
+
+    assert can_castle_queenside(Color.WHITE, board) is False

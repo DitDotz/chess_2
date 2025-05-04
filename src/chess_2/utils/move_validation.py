@@ -109,62 +109,50 @@ def has_horizontal_path_clear_between(
     
     return True
 
+def can_castle_kingside(color: Color, piece_loc: dict[Position, Piece]) -> bool:
 
+    from chess_2.piece_movement.move_generator import is_kingside_castling_path_under_attack
 
-# TODO
-def is_square_under_attack(pos:Position, color:Color, piece_loc:dict[Position, Piece]):
-    pass
+    king_pos = Position(7, 4) if color == Color.WHITE else Position(0, 4)
+    rook_pos = Position(7, 7) if color == Color.WHITE else Position(0, 7)
 
-# TODO
-def is_kingside_castling_path_under_attack(color: Color, piece_loc: dict[Position, Piece]) -> bool:
-    squares_to_check = {
-        Color.WHITE: [Position(7, 5), Position(7, 6)],  # f1, g1
-        Color.BLACK: [Position(0, 5), Position(0, 6)],  # f8, g8
-    }[color]
+    king = piece_loc.get(king_pos)
+    rook = piece_loc.get(rook_pos)
 
-    return any(
-        is_square_under_attack(square, color, piece_loc) for square in squares_to_check
-    )
+    if not (king.piece_type==PieceType.KING and rook.piece_type==PieceType.ROOK):
+        return False
 
-# TODO
-def is_queenside_castling_path_under_attack(color: Color, piece_loc: dict[Position, Piece]) -> bool:
-    squares_to_check = {
-        Color.WHITE: [Position(7, 3), Position(7, 2)],  # d1, c1
-        Color.BLACK: [Position(0, 3), Position(0, 2)],  # d8, c8
-    }[color]
+    if king.has_moved or rook.has_moved:
+        return False
+        
+    if not has_horizontal_path_clear_between(piece_loc, king_pos, rook_pos):
+        return False
 
-    return any(
-        is_square_under_attack(square, color, piece_loc) for square in squares_to_check
-    )
+    if is_kingside_castling_path_under_attack(color=color, piece_loc=piece_loc):
+        return False
 
-# TODO
-def is_king_in_check(king:Piece, piece_loc: dict[Position, Piece]) -> bool:
-    """
-    Check if the king of the given color is in check in the current position.
+    return True
 
-    Args:
-        king: The king Piece
-        piece_loc (dict[Position, Piece]): The current state of the chessboard.
+def can_castle_queenside(color: Color, piece_loc: dict[Position, Piece]) -> bool:
 
-    Returns:
-        bool: True if the king is in check, False otherwise.
-    """
-    return is_square_under_attack(pos=king.position, color=king.color, piece_loc=piece_loc)
+    from chess_2.piece_movement.move_generator import is_queenside_castling_path_under_attack
 
-# TODO
-def has_valid_moves(color:Color, piece_loc: dict[Position, Piece]):
-    pass
+    king_pos = Position(7, 4) if color == Color.WHITE else Position(0, 4)
+    rook_pos = Position(7, 0) if color == Color.WHITE else Position(0, 0)
 
-#  TODO
-def is_king_in_checkmate(king:Piece, piece_loc: dict[Position, Piece]) -> bool:
-    """
-    Check if the king of the given color is in check in the current position.
+    king = piece_loc.get(king_pos)
+    rook = piece_loc.get(rook_pos)
 
-    Args:
-        king: The king Piece
-        piece_loc (dict[Position, Piece]): The current state of the chessboard.
+    if not (king.piece_type==PieceType.KING and rook.piece_type==PieceType.ROOK):
+        return False
 
-    Returns:
-        bool: True if the king is in checkmate, False otherwise.
-    """
-    return is_king_in_check(king, piece_loc) and not has_valid_moves(king.color, piece_loc)
+    if king.has_moved or rook.has_moved:
+        return False
+
+    if not has_horizontal_path_clear_between(piece_loc, king_pos, rook_pos):
+        return False
+
+    if is_queenside_castling_path_under_attack(color=color, piece_loc=piece_loc):
+        return False
+
+    return True

@@ -1,8 +1,8 @@
+import re
 
 from chess_2.utils.enums import PieceType, Color
 from chess_2.piece.piece import Piece
 from chess_2.utils.types import Position
-import re
 
 # dictionary of fen as keys and PieceType as values
 PIECE_TYPE_FEN_MAP: dict[str, PieceType] = {
@@ -48,36 +48,49 @@ def parse_fen(fen: str) -> dict[Position, Piece]:
 
     return piece_loc
 
-def parse_user_input(user_input: str) -> tuple[Piece, Position]:
+def parse_user_input(user_input: str, piece_color:Color) -> tuple[Piece, Position]:
     """
     Parse the user input for chess moves.
-    
-    Args:
-        user_input (str): The user input move in the format '(pe4e5)'.
-    
-    Returns:
-        Tuple[Piece, Position]: The parsed piece, destination position.
-    """
-    # Regex to match the pattern of a piece and two board squares (e.g., 'pe4e5')
-    match = re.match(r"(?P<piece>[pnbrqkPNBRQK])(?P<from_square>[a-h][1-8])(?P<to_square>[a-h][1-8])", user_input)
-    # the group('name') syntax refers to named capture groups in a regular expression. These are defined using the syntax (?P<name>...).
 
+    Supports both standard notation like 'Pe2e4' and special castling notation 'O-O' or 'O-O-O'.
+
+    Args:
+        user_input (str): The move in string format.
+        piece_color (Color): The current player's color
+
+    Returns:
+        Tuple[Piece, Position]: The parsed piece and the destination position.
+    """
+    user_input = user_input.strip()
+
+    # Castling handling
+    if user_input == "O-O":
+        king_pos = algebraic_to_index("e1" if piece_color == Color.WHITE else "e8")
+        dest_pos = algebraic_to_index("g1" if piece_color == Color.WHITE else "g8")
+        return Piece(position=king_pos, color=piece_color, piece_type=PieceType.KING), dest_pos
+
+    elif user_input == "O-O-O":
+        king_pos = algebraic_to_index("e1" if piece_color == Color.WHITE else "e8")
+        dest_pos = algebraic_to_index("c1" if piece_color == Color.WHITE else "c8")
+        return Piece(position=king_pos, color=piece_color, piece_type=PieceType.KING), dest_pos
+
+    # Regex to match piece and two positions (e.g., Pe2e4)
+    match = re.match(r"(?P<piece>[pnbrqkPNBRQK])(?P<from_square>[a-h][1-8])(?P<to_square>[a-h][1-8])", user_input)
     if not match:
         raise ValueError("Invalid input format")
 
-    piece_letter = match.group('piece')  # e.g., 'p' for pawn
-    from_square = match.group('from_square')  # e.g., 'e4'
-    to_square = match.group('to_square')  # e.g., 'e5'
+    piece_letter = match.group('piece')
+    from_square = match.group('from_square')
+    to_square = match.group('to_square')
 
-    piece_type = PIECE_TYPE_FEN_MAP[piece_letter.lower()]  # maps 'p' -> PieceType.PAWN
-    piece_color = Color.BLACK if piece_letter.islower() else Color.WHITE
+    piece_type = PIECE_TYPE_FEN_MAP[piece_letter.lower()]
+    parsed_color = Color.BLACK if piece_letter.islower() else Color.WHITE
 
-    # Convert the squares to (row, col) format
-    from_pos:Position = algebraic_to_index(from_square)
-    to_pos:Position = algebraic_to_index(to_square)
+    from_pos = algebraic_to_index(from_square)
+    to_pos = algebraic_to_index(to_square)
 
-    piece_moved = Piece(from_pos,piece_color, piece_type)
-    
+    piece_moved = Piece(from_pos, parsed_color, piece_type)
+
     return piece_moved, to_pos
 
 FILE_TO_INDEX = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7}
@@ -85,7 +98,6 @@ RANK_TO_INDEX = {'1': 7, '2': 6, '3': 5, '4': 4, '5': 3, '6': 2, '7': 1, '8': 0}
 
 INDEX_TO_FILE = {v: k for k, v in FILE_TO_INDEX.items()}
 INDEX_TO_RANK = {v: k for k, v in RANK_TO_INDEX.items()}
-
 
 def algebraic_to_index(fen_notation: str) -> Position:
     """
