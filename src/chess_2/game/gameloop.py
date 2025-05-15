@@ -7,7 +7,6 @@ from chess_2.utils.enums import Color, PieceType
 from chess_2.utils.fen import START_FEN, parse_fen, parse_user_input
 from chess_2.utils.types import Position
 from chess_2.utils.input_validation import (
-    is_valid_notation,
     does_piece_exist_at_pos,
     InvalidNotation,
     PieceDoesNotExist,
@@ -22,6 +21,7 @@ def get_player_input(board_state:BoardState) -> str:
     Returns:
         Tuple of (from_pos, to_pos) in algebraic notation, e.g., ('e2', 'e4').
     """
+
     print(f"{board_state.player_turn}'s move:")
     move = input(f"Enter your move (e.g., be2e4): ")
     return move
@@ -32,11 +32,11 @@ def run_game():
     board_state.piece_pos = parse_fen(START_FEN)
     
     while True:
-
+        print(generate_board_repr(board_state.piece_pos))
         move = get_player_input(board_state)
 
         try:
-            result = parse_user_input(move)
+            result = parse_user_input(move, board_state.player_turn)
             
             if result is None:
                 raise InvalidNotation(move)

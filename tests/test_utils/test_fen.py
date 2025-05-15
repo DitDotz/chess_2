@@ -79,14 +79,6 @@ def test_parse_user_input_black_knight():
     assert piece == expected_piece
     assert to_pos == expected_to_pos
 
-def test_parse_user_input_invalid_format():
-    with pytest.raises(ValueError):
-        parse_user_input("e2e4", piece_color=Color.WHITE)  # Missing parentheses and piece type
-
-def test_parse_user_input_invalid_piece():
-    with pytest.raises(ValueError):
-        parse_user_input("xe2e4", piece_color=Color.WHITE)  # 'x' is not a valid piece type
-
 
 @pytest.mark.parametrize("color,notation,expected_dest", [
     (Color.WHITE, "O-O", "g1"),

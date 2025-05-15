@@ -77,7 +77,7 @@ def parse_user_input(user_input: str, piece_color:Color) -> tuple[Piece, Positio
     # Regex to match piece and two positions (e.g., Pe2e4)
     match = re.match(r"(?P<piece>[pnbrqkPNBRQK])(?P<from_square>[a-h][1-8])(?P<to_square>[a-h][1-8])", user_input)
     if not match:
-        raise ValueError("Invalid input format")
+        return None
 
     piece_letter = match.group('piece')
     from_square = match.group('from_square')
