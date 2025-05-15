@@ -17,6 +17,6 @@ Implement Docker multi-container orchestration
 ## Known missing features/bugs
 
 en-passant
-stalemate
-draw
-king can castle when in chec
+stalemate - king is not in check but there are no legal moves
+draw by 3 move repetition
+king can castle when in check currently
