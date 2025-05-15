@@ -1,4 +1,4 @@
-# Created by https://www.toptal.com/developers/gitignore/api/python,poetry
+# Created by https://www.toptal.com/de1elopers/gitignore/api/python,poetry
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,poetry
 
 #!! ERROR: poetry is undefined. Use list command to see defined gitignore types !!#
@@ -181,3 +181,20 @@ pyrightconfig.json
 docs/_build/
 docs/.doctrees/
 docs/.buildinfo
+
+# Poetry
+.poetry/
+.cache/
+dist/
+build/
+
+# VSCode / IDEs
+.vscode/
+.idea/
+
+
+# Docker
+*.log
+Dockerfile
+docker-compose.override.yml  # if you use per-developer overrides
+*.env                        # for environment variables (don't commit secrets)
